@@ -9,7 +9,11 @@ contract Casino {
     //definierte Werte
     uint256 min_value = 1_000_000_000_000_000_000;
     uint256 min_number = 1;
-    uint256 max_number = 10;
+    uint256 max_number = 2;
+    uint256 range = max_number - min_number + 1;
+
+    //90 von 100 -> 0.9
+    uint256 house_edge = 90;
 
     //Funktion um eine Wette zu erstellen
     function place_bet(uint256 bet_number) public payable {
@@ -28,20 +32,33 @@ contract Casino {
         bet_values[msg.sender] = msg.value;
     }
 
-    function claim()
-        public
-        view
-        returns (
-            uint256,
-            uint256,
-            uint256
-        )
-    {
+    function send_win(address winner, uint256 amount) public {
+        (bool sent, bytes memory data) = winner.call{value: amount}("");
+        require(sent, "Failed to send Ether");
+    }
+
+    function claim() public view {
+        //uperprufen, dass genugend block vergangen sind
+        require(block_numbers[msg.sender] + 1 < block.number);
+
         //generieren der Zufallszahl
-        return (
-            bet_numbers[msg.sender],
-            bet_values[msg.sender],
-            block_numbers[msg.sender]
+        uint256 random_number = (uint256(
+            keccak256(
+                abi.encodePacked(
+                    block.difficulty,
+                    block.timestamp,
+                    blockhash(block_numbers[msg.sender] + 1)
+                )
+            )
+        ) % range) + 1;
+
+        //uberprufen ob gewonnen
+        require(random_number == bet_numbers[msg.sender], "You didn't win");
+
+        //auszahlen
+        send_win(
+            msg.sender,
+            (bet_values[msg.sender] * range * house_edge) / 100
         );
     }
 }

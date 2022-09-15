@@ -2,8 +2,8 @@ from brownie import Casino, accounts, reverts
 
 # deffinieren der bereiche und des mindestbetrag
 bet_num_min = 1
-bet_num_max = 10
-bet_num = 5
+bet_num_max = 2
+bet_num = 1
 bet_value_min = 1_000_000_000_000_000_000
 bet_value = bet_value_min
 
@@ -19,7 +19,13 @@ def test_place_bet():
     place_bet_transaction.wait(1)
     bet_block = place_bet_transaction.block_number
 
-    retrieved_bet_number, retrieved_bet_value, retrieved_bet_block = casino.claim()
+    (
+        retrieved_bet_number,
+        retrieved_bet_value,
+        retrieved_bet_block,
+        random_number,
+    ) = casino.claim()
+    assert random_number == 1
     assert retrieved_bet_number == bet_num
     assert retrieved_bet_value == bet_value
     assert retrieved_bet_block == bet_block
