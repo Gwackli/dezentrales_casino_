@@ -11,8 +11,19 @@ contract Casino {
         bet_values[msg.sender] = msg.value;
     }
 
-    function claim() public view returns (uint256) {
-        //return bet_numbers[msg.sender];
-        return 5;
+    function claim()
+        public
+        view
+        returns (
+            uint256,
+            uint256,
+            uint256
+        )
+    {
+        return (
+            bet_numbers[msg.sender],
+            bet_values[msg.sender],
+            block_numbers[msg.sender]
+        );
     }
 }
