@@ -15,6 +15,8 @@ contract Casino {
     //90 von 100 -> 0.9
     uint256 house_edge = 90;
 
+    function fill_house() public payable {}
+
     //Funktion um eine Wette zu erstellen
     function place_bet(uint256 bet_number) public payable {
         //uberprufen ob der mindestbetrag bezahlt wurde
@@ -39,7 +41,10 @@ contract Casino {
 
     function claim() public {
         //uperprufen, dass genugend block vergangen sind
-        require(block_numbers[msg.sender] < block.number);
+        require(
+            block_numbers[msg.sender] < block.number,
+            "You have to wait for more blocks to pass"
+        );
 
         //generieren der Zufallszahl
         uint256 random_number = (uint256(
@@ -58,7 +63,7 @@ contract Casino {
         //auszahlen
         send_win(
             msg.sender,
-            (bet_values[msg.sender] * range * house_edge) / 100
+            ((bet_values[msg.sender] * range * house_edge)) / 100
         );
     }
 }

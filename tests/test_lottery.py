@@ -10,7 +10,7 @@ bet_value = bet_value_min
 
 # testen ob eine einfache Wette abgeschlossen werden kann
 def test_place_bet():
-    account = accounts[0]
+    account = accounts[1]
     casino = Casino.deploy({"from": account})
 
     place_bet_transaction = casino.place_bet(
@@ -18,6 +18,8 @@ def test_place_bet():
     )
     place_bet_transaction.wait(1)
     bet_block = place_bet_transaction.block_number
+
+    casino.fill_house({"from": accounts[3], "value": 8 * bet_value})
 
     casino.claim()
     """(
