@@ -37,9 +37,9 @@ contract Casino {
         require(sent, "Failed to send Ether");
     }
 
-    function claim() public view {
+    function claim() public {
         //uperprufen, dass genugend block vergangen sind
-        require(block_numbers[msg.sender] + 1 < block.number);
+        require(block_numbers[msg.sender] < block.number);
 
         //generieren der Zufallszahl
         uint256 random_number = (uint256(
@@ -53,7 +53,7 @@ contract Casino {
         ) % range) + 1;
 
         //uberprufen ob gewonnen
-        require(random_number == bet_numbers[msg.sender], "You didn't win");
+        //require(random_number == bet_numbers[msg.sender], "You didn't win");
 
         //auszahlen
         send_win(

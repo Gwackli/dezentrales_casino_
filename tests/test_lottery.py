@@ -19,7 +19,8 @@ def test_place_bet():
     place_bet_transaction.wait(1)
     bet_block = place_bet_transaction.block_number
 
-    (
+    casino.claim()
+    """(
         retrieved_bet_number,
         retrieved_bet_value,
         retrieved_bet_block,
@@ -28,7 +29,7 @@ def test_place_bet():
     assert random_number == 1
     assert retrieved_bet_number == bet_num
     assert retrieved_bet_value == bet_value
-    assert retrieved_bet_block == bet_block
+    assert retrieved_bet_block == bet_block"""
 
 
 # testen dass man nicht mit zu wenig beitreten kann
@@ -40,12 +41,27 @@ def test_min_value():
 
 
 # teste, dass man nur auf erlaubte Zahlen setzten kann
-def test_range():
+def test_range_min():
     account = accounts[0]
     casino = Casino.deploy({"from": account})
     with reverts():
         casino.place_bet(bet_num_min - 1, {"from": account, "value": bet_value})
+
+
+def test_range_to_small():
+    account = accounts[0]
+    casino = Casino.deploy({"from": account})
     casino.place_bet(bet_num_min, {"from": account, "value": bet_value})
+
+
+def test_range_max():
+    account = accounts[0]
+    casino = Casino.deploy({"from": account})
     with reverts():
         casino.place_bet(bet_num_max + 1, {"from": account, "value": bet_value})
+
+
+def test_range_to_big():
+    account = accounts[0]
+    casino = Casino.deploy({"from": account})
     casino.place_bet(bet_num_max, {"from": account, "value": bet_value})
