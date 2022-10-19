@@ -15,7 +15,7 @@ contract Casino {
     //90 von 100 -> 0.9
     uint256 house_edge = 90;
 
-    function fill_house() public payable {}
+    function fill_bank() public payable {}
 
     //Funktion um eine Wette zu erstellen
     function place_bet(uint256 bet_number) public payable {

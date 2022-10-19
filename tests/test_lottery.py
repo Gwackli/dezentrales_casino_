@@ -19,7 +19,7 @@ def test_place_bet():
     place_bet_transaction.wait(1)
     bet_block = place_bet_transaction.block_number
 
-    casino.fill_house({"from": accounts[3], "value": 8 * bet_value})
+    casino.fill_bank({"from": accounts[3], "value": 8 * bet_value})
 
     casino.claim()
     """(
