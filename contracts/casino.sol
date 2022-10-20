@@ -15,7 +15,19 @@ contract Casino {
     //90 von 100 -> 0.9
     uint256 house_edge = 90;
 
+    address private owner;
+
+    constructor() public {
+        owner = msg.sender();
+    }
+
     function fill_bank() public payable {}
+
+    function empty_bank(uint256 amount) public {
+        require(msg.sender == owner);
+        (bool sent, bytes memory data) = owner.call{value: amount}("");
+        require(sent, "Failed to send Ether");
+    }
 
     //Funktion um eine Wette zu erstellen
     function place_bet(uint256 bet_number) public payable {
@@ -55,7 +67,7 @@ contract Casino {
                     blockhash(block_numbers[msg.sender] + 1)
                 )
             )
-        ) % range) + 1;
+        ) % range) + min_number;
 
         //uberprufen ob gewonnen
         //require(random_number == bet_numbers[msg.sender], "You didn't win");
