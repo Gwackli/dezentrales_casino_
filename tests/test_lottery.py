@@ -34,6 +34,21 @@ def test_place_bet():
     assert retrieved_bet_block == bet_block"""
 
 
+def test_owner_can_empty_bank():
+    account = accounts[0]
+    casino = Casino.deploy({"from": account})
+    casino.fill_bank({"from": accounts[3], "value": 8 * bet_value})
+    casino.empty_bank(bet_value, {"from": account})
+
+
+def test_not_owner_cannot_empty_bank():
+    account = accounts[0]
+    casino = Casino.deploy({"from": account})
+    casino.fill_bank({"from": accounts[3], "value": 8 * bet_value})
+    with reverts():
+        casino.empty_bank(bet_value, {"from": accounts[1]})
+
+
 # testen dass man nicht mit zu wenig beitreten kann
 def test_min_value():
     account = accounts[0]

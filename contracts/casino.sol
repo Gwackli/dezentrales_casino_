@@ -18,7 +18,7 @@ contract Casino {
     address private owner;
 
     constructor() public {
-        owner = msg.sender();
+        owner = msg.sender;
     }
 
     function fill_bank() public payable {}
