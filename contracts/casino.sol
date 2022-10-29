@@ -5,12 +5,14 @@ contract Casino {
     mapping(address => uint256) public block_numbers;
     mapping(address => uint256) public bet_numbers;
     mapping(address => uint256) public bet_values;
+    mapping(address => uint256) public bet_min_number;
+    mapping(address => uint256) public bet_range;
 
     //definierte Werte
-    uint256 min_value = 1_000_000_000_000_000_000;
+    uint256 min_value = 1_000_000_000_000_000_000; //1 Matic
     uint256 min_number = 1;
-    uint256 max_number = 2;
-    uint256 range = max_number - min_number + 1;
+    //uint256 max_number = 2;
+    //uint256 range = max_number - min_number + 1;
 
     //90 von 100 -> 0.9
     uint256 house_edge = 90;
@@ -30,13 +32,15 @@ contract Casino {
     }
 
     //Funktion um eine Wette zu erstellen
-    function place_bet(uint256 bet_number) public payable {
+    function place_bet(uint256 bet_number, uint256 range) public payable {
         //uberprufen ob der mindestbetrag bezahlt wurde
         require(msg.value >= min_value, "Not enough Matic");
 
+        require(range > 0);
+
         //uberprufen ob die gesetzte zahl im beriech der zufallszahl ist
         require(
-            bet_number >= min_number && bet_number <= max_number,
+            bet_number >= min_number && bet_number <= min_number + range,
             "Number not in range"
         );
 
@@ -44,6 +48,7 @@ contract Casino {
         block_numbers[msg.sender] = block.number;
         bet_numbers[msg.sender] = bet_number;
         bet_values[msg.sender] = msg.value;
+        bet_range[msg.sender] = range;
     }
 
     function send_win(address winner, uint256 amount) public {
@@ -67,7 +72,7 @@ contract Casino {
                     blockhash(block_numbers[msg.sender] + 1)
                 )
             )
-        ) % range) + min_number;
+        ) % bet_range[msg.sender]) + min_number;
 
         //uberprufen ob gewonnen
         //require(random_number == bet_numbers[msg.sender], "You didn't win");
@@ -75,7 +80,8 @@ contract Casino {
         //auszahlen
         send_win(
             msg.sender,
-            ((bet_values[msg.sender] * range * house_edge)) / 100
+            ((bet_values[msg.sender] * bet_range[msg.sender] * house_edge)) /
+                100
         );
     }
 }
