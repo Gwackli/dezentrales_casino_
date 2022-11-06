@@ -34,6 +34,7 @@ def test_place_bet():
     assert retrieved_bet_block == bet_block"""
 
 
+# testen ob der Ersteller des Contracts X Amount vom contract wieder entfernen kann
 def test_owner_can_empty_bank():
     account = accounts[0]
     casino = Casino.deploy({"from": account})
@@ -41,6 +42,7 @@ def test_owner_can_empty_bank():
     casino.empty_bank(bet_value, {"from": account})
 
 
+# testen dass keine andere Person Geld entfernen kann
 def test_not_owner_cannot_empty_bank():
     account = accounts[0]
     casino = Casino.deploy({"from": account})
@@ -65,12 +67,14 @@ def test_range_min():
         casino.place_bet(bet_num_min - 1, range, {"from": account, "value": bet_value})
 
 
+# testen dass die mindestzahl geht
 def test_range_to_small():
     account = accounts[0]
     casino = Casino.deploy({"from": account})
     casino.place_bet(bet_num_min, range, {"from": account, "value": bet_value})
 
 
+# testen dass über der range nicht geht
 def test_range_max():
     account = accounts[0]
     casino = Casino.deploy({"from": account})
@@ -80,6 +84,7 @@ def test_range_max():
         )
 
 
+# testen dass das obere Ende noch geht
 def test_range_to_big():
     account = accounts[0]
     casino = Casino.deploy({"from": account})
