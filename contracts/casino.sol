@@ -11,6 +11,7 @@ contract Casino {
     //definierte Werte
     uint256 min_value = 1_000_000_000_000_000_000; //1 Matic
     uint256 max_value = 10_000_000_000_000_000_000; //10 Matic
+    uint256 max_ratio_bet_to_contract_balance = 5; //Der theoretisch möglich Gewinn muss x-mal kleiner sein als die contract balance
     uint256 min_number = 1;
     //uint256 max_number = 2;
     //uint256 range = max_number - min_number + 1;
@@ -46,6 +47,13 @@ contract Casino {
 
         //eine gültige Range angeben
         require(range > 0);
+
+        //uberprufen, dass der contract nicht komplett geleert wird mit einer Wette
+        require(
+            msg.value * range * max_ratio_bet_to_contract_balance <=
+                address(this).balance,
+            "Kleinere range oder kleineren Wettbetrag setzen"
+        );
 
         //uberprufen ob die gesetzte zahl im beriech der zufallszahl ist
         require(
