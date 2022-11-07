@@ -32,6 +32,12 @@ contract Casino {
         require(sent, "Failed to send Ether");
     }
 
+    //Der maximale Wettbetrag der gesetzt werden darf
+    function change_max_value(uint256 value) public {
+        require(msg.sender == owner);
+        max_value = value;
+    }
+
     //Funktion um eine Wette zu erstellen
     function place_bet(uint256 bet_number, uint256 range) public payable {
         //uberprufen ob der mindestbetrag bezahlt wurde
