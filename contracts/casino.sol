@@ -39,6 +39,11 @@ contract Casino {
         max_value = value;
     }
 
+    function change_ratio_payout_balance(uint256 value) public {
+        require(msg.sender == owner);
+        max_ratio_bet_to_contract_balance = value;
+    }
+
     //Funktion um eine Wette zu erstellen
     function place_bet(uint256 bet_number, uint256 range) public payable {
         //uberprufen ob der mindestbetrag bezahlt wurde
