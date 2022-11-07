@@ -10,6 +10,7 @@ contract Casino {
 
     //definierte Werte
     uint256 min_value = 1_000_000_000_000_000_000; //1 Matic
+    uint256 max_value = 10_000_000_000_000_000_000; //10 Matic
     uint256 min_number = 1;
     //uint256 max_number = 2;
     //uint256 range = max_number - min_number + 1;
@@ -35,7 +36,9 @@ contract Casino {
     function place_bet(uint256 bet_number, uint256 range) public payable {
         //uberprufen ob der mindestbetrag bezahlt wurde
         require(msg.value >= min_value, "Not enough Matic");
+        require(msg.value <= max_value, "Too much Matic");
 
+        //eine gültige Range angeben
         require(range > 0);
 
         //uberprufen ob die gesetzte zahl im beriech der zufallszahl ist
