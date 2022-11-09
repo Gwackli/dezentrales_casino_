@@ -73,7 +73,7 @@ contract Casino {
         bet_range[msg.sender] = range;
     }
 
-    function send_win(address winner, uint256 amount) public {
+    function send_win(address winner, uint256 amount) private {
         (bool sent, bytes memory data) = winner.call{value: amount}("");
         require(sent, "Failed to send Ether");
     }
