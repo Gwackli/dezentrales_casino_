@@ -81,7 +81,7 @@ contract Casino {
     function claim() public {
         //uperprufen, dass genugend block vergangen sind
         require(
-            block_numbers[msg.sender] < block.number,
+            block_numbers[msg.sender] + 2 < block.number,
             "You have to wait for more blocks to pass"
         );
 
@@ -105,5 +105,6 @@ contract Casino {
             ((bet_values[msg.sender] * bet_range[msg.sender] * house_edge)) /
                 100
         );
+        bet_values[msg.sender] = 0;
     }
 }
