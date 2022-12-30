@@ -1,4 +1,4 @@
-from brownie import Casino, accounts, reverts
+from brownie import Casino, accounts, reverts, network, config
 import pytest
 
 # deffinieren der bereiche und des mindestbetrag
@@ -8,6 +8,12 @@ bet_num = 1
 bet_value_min = 1_000_000_000_000_000_000
 bet_value = bet_value_min
 
+
+def get_account():
+    if network.show_active() == "development":
+        return accounts[0]
+    else:
+        return accounts.add(config["wallets"]["from_key"])
 
 @pytest.fixture(scope="module")
 def casino():

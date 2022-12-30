@@ -90,7 +90,6 @@ contract Casino {
             keccak256(
                 abi.encodePacked(
                     block.difficulty,
-                    block.timestamp,
                     blockhash(block_numbers[msg.sender] + 1)
                 )
             )
