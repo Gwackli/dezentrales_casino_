@@ -11,7 +11,8 @@ bet_value = bet_value_min
 
 @pytest.fixture(scope="module")
 def casino():
-    account = accounts[0]
+    # account = accounts[0]
+    account = get_account()
     # casino = Casino.deploy({"from": account})
     casino = Casino.deploy({"from": account})
     casino.fill_bank({"from": accounts[3], "value": 10 * bet_value})
