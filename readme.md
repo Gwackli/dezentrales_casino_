@@ -3,6 +3,11 @@
     speichern der wette in liste
 2. claim: User kann überprüfen lassen ob er gewonnen hat (Genrerierung der Zufallszahl) & auszahlung
 
+brownie networks add Ethereum ropstenquicknode host=YOUR_QUICKNODE_URL c
+
+brownie accounts new <id>
+    
+brownie run deploy.py --network MumbaiAlchemy
 
 polygon Mumbai
 always win:
