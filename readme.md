@@ -2,3 +2,17 @@
     maximal pro zahl wetten
     speichern der wette in liste
 2. claim: User kann überprüfen lassen ob er gewonnen hat (Genrerierung der Zufallszahl) & auszahlung
+
+
+polygon Mumbai
+always win:
+0x156B03A252689861E3aC9307f359608720DBF409
+
+random win:
+0x5dB3eE642937932dC930f588ee128F52A9641eDb
+
+
+acc: deployer_metamask
+network: MumbaiAlchemy
+
+brownie run deploy.py --network MumbaiAlchemy
