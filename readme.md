@@ -21,3 +21,12 @@ acc: deployer_metamask
 network: MumbaiAlchemy
 
 brownie run deploy.py --network MumbaiAlchemy
+
+
+fill bank:
+brownie console --network MumbaiAlchemy
+casino = Casino[0] //random
+or
+casino = Casino[1] //always win
+
+casino.fill_bank({"from": accounts.load("deployer_metamask"), "value": 10 * 1000000000000000000})
