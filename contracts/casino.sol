@@ -88,10 +88,7 @@ contract Casino {
         //generieren der Zufallszahl
         uint256 random_number = (uint256(
             keccak256(
-                abi.encodePacked(
-                    block.difficulty,
-                    blockhash(block_numbers[msg.sender] + 1)
-                )
+                abi.encodePacked(blockhash(block_numbers[msg.sender] + 1))
             )
         ) % bet_range[msg.sender]) + min_number;
 
