@@ -11,7 +11,8 @@ contract Casino {
     //definierte Werte
     uint256 min_value = 1_000_000_000_000_000_000; //1 Matic
     uint256 max_value = 10_000_000_000_000_000_000; //10 Matic
-    uint256 max_ratio_bet_to_contract_balance = 5; //Der theoretisch möglich Gewinn muss x-mal kleiner sein als die contract balance
+    uint256 max_ratio_bet_to_contract_balance = 5; //Der theoretisch möglich Gewinn muss
+    //x-mal kleiner sein als die contract balance
     uint256 min_number = 1;
     //uint256 max_number = 2;
     //uint256 range = max_number - min_number + 1;
@@ -19,26 +20,33 @@ contract Casino {
     //90 von 100 -> 0.9
     uint256 house_edge = 90;
 
+    //Adresse für den Owner des Smart-Contracts
     address private owner;
 
+    //Constructor wird bei Erstellung ausgeführt
+    //Es wird gespeichert wer den Smart-Contract deployed hat
     constructor() public {
         owner = msg.sender;
     }
 
+    //Funktion um die Bank wieder zu füllen mit Matic
     function fill_bank() public payable {}
 
+    //Funktion um Matic aus der Bank zu entfernen
+    //Als Parameter wird der Betrag angegeben
     function empty_bank(uint256 amount) public {
         require(msg.sender == owner);
         (bool sent, bytes memory data) = owner.call{value: amount}("");
         require(sent, "Failed to send Ether");
     }
 
-    //Der maximale Wettbetrag der gesetzt werden darf
+    //Funktion um den maximalen Wettbetrag zu ändern
     function change_max_value(uint256 value) public {
         require(msg.sender == owner);
         max_value = value;
     }
 
+    //Funktion um den change_ratio_payout_balance zu ändern
     function change_ratio_payout_balance(uint256 value) public {
         require(msg.sender == owner);
         max_ratio_bet_to_contract_balance = value;
@@ -48,6 +56,7 @@ contract Casino {
     function place_bet(uint256 bet_number, uint256 range) public payable {
         //uberprufen ob der mindestbetrag bezahlt wurde
         require(msg.value >= min_value, "Not enough Matic");
+        //uberprufen ob nicht zu viel gewettet wurde
         require(msg.value <= max_value, "Too much Matic");
 
         //eine gültige Range angeben
@@ -73,11 +82,14 @@ contract Casino {
         bet_range[msg.sender] = range;
     }
 
+    //Funktion um den Gewinner auszuzahlen
+    //Parameter sind die Adresse des Gewinnners und der Betrag
     function send_win(address winner, uint256 amount) private {
         (bool sent, bytes memory data) = winner.call{value: amount}("");
         require(sent, "Failed to send Ether");
     }
 
+    //Funktion um seinen Gewinn zu bekommen
     function claim() public {
         //uperprufen, dass genugend block vergangen sind
         require(
@@ -93,7 +105,7 @@ contract Casino {
         ) % bet_range[msg.sender]) + min_number;
 
         //uberprufen ob gewonnen
-        //require(random_number == bet_numbers[msg.sender], "You didn't win");
+        require(random_number == bet_numbers[msg.sender], "You didn't win");
 
         //auszahlen
         send_win(
@@ -101,6 +113,9 @@ contract Casino {
             ((bet_values[msg.sender] * bet_range[msg.sender] * house_edge)) /
                 100
         );
+
+        //Den Wert der Wette auf 9 setzen
+        //Durch dies kann die Wette nicht mehrmals ausgezahlt werden
         bet_values[msg.sender] = 0;
     }
 }
